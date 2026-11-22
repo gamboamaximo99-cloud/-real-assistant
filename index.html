@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REAL | AI SYSTEM</title>
+
+<style>
+:root {
+  --caribbean: #20c997;
+  --dark: #050b0a;
+  --panel: #0b1412;
+  --text: #e1f5ef;
+  --muted: #7b9690;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--dark);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  border-bottom:1px solid #17352e;
+}
+.logo {
+  font-size:23px;
+  letter-spacing:5px;
+  color:var(--caribbean);
+  font-weight:700;
+}
+.status {
+  font-size:11px;
+  color:var(--caribbean);
+  letter-spacing:2px;
+}
+main {
+  max-width:850px;
+  margin:auto;
+  padding:30px 18px;
+}
+.system-info {
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--muted);
+}
+.core-area {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:300px;
+}
+.core {
+  width:165px;
+  height:165px;
+  border-radius:50%;
+  border:1px solid var(--caribbean);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  box-shadow:0 0 25px #20c99740, inset 0 0 25px #20c99720;
+  animation:pulse 4s infinite ease-in-out;
+}
+.core::before, .core::after {
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  border:1px solid #20c99770;
+}
+.core::before {
+  width:125%;
+  height:125%;
+  border-right-color:transparent;
+  border-left-color:transparent;
+  animation:rotate 8s linear infinite;
+}
+.core::after {
+  width:145%;
+  height:145%;
+  border-top-color:transparent;
+  border-bottom-color:transparent;
+  animation:rotate 12s linear infinite reverse;
+}
+.core-text {
+  color:var(--caribbean);
+  letter-spacing:5px;
+  font-size:23px;
+}
+@keyframes pulse {
+  0%,100% {transform:scale(1);opacity:.85}
+  50% {transform:scale(1.06);opacity:1}
+}
+@keyframes rotate {
+  to {transform:rotate(360deg)}
+}
+.section-title {
+  text-align:center;
+  font-size:12px;
+  letter-spacing:3px;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+.chat {
+  background:var(--panel);
+  border:1px solid #19332d;
+  border-radius:15px;
+  padding:15px;
+}
+.messages {
+  height:260px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:5px;
+}
+.msg {
+  padding:12px;
+  border-radius:12px;
+  max-width:90%;
+  font-size:14px;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+.assistant {
+  background:#10241f;
+  border:1px solid #1c4237;
+  align-self:flex-start;
+}
+.user {
+  background:#163b31;
+  align-self:flex-end;
+}
+.input-area {
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+input {
+  flex:1;
+  min-width:0;
+  background:#050b0a;
+  border:1px solid #24473d;
+  border-radius:10px;
+  padding:14px;
+  color:white;
+  outline:none;
+}
+button {
+  background:#10241f;
+  border:1px solid var(--caribbean);
+  color:var(--caribbean);
+  border-radius:10px;
+  padding:12px;
+  cursor:pointer;
+}
+button:hover {
+  background:#173b30;
+}
+.tools {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:15px;
+  flex-wrap:wrap;
+}
+.tools button {
+  font-size:12px;
+}
+footer {
+  text-align:center;
+  padding:30px;
+  font-size:10px;
+  letter-spacing:2px;
+  color:#55736b;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">REAL</div>
+  <div class="status" id="status">● EN ESPERA</div>
+</header>
+
+<main>
+
+  <div class="system-info">
+    <span>SYSTEM ONLINE</span>
+    <span id="clock">--:--:--</span>
+  </div>
+
+  <div class="core-area">
+    <div class="core">
+      <div class="core-text">REAL</div>
+    </div>
+  </div>
+
+  <div class="section-title">PERSONAL AI ASSISTANT</div>
+
+  <div class="chat">
+    <div class="messages" id="messages">
+      <div class="msg assistant">
+        REAL iniciado.
+
+        Sistemas operativos.
+        A la espera de instrucciones.
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input id="input" placeholder="Escribe una instrucción..." autocomplete="off">
+      <button onclick="sendMessage()">➤</button>
+    </div>
+
+    <div class="tools">
+      <button onclick="startVoice()">🎙 VOZ</button>
+      <button onclick="toggleSpeech()">🔊 VOZ ON/OFF</button>
+      <button onclick="clearChat()">⌫ LIMPIAR</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>REAL SYSTEMS · VERSION 1.0</footer>
+
+<script>
+let speechEnabled = true;
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("es-CL");
+}
+setInterval(updateClock,1000);
+updateClock();
+
+function setStatus(text) {
+  document.getElementById("status").textContent = "● " + text;
+}
+
+function addMessage(text, type) {
+  const container = document.getElementById("messages");
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  div.textContent = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function getResponse(text) {
+  const t = text.toLowerCase().trim();
+
+  if (t.includes("hola"))
+    return "Saludos. REAL está operativo. ¿En qué puedo ayudar?";
+  if (t.includes("hora"))
+    return "La hora actual es " + new Date().toLocaleTimeString("es-CL");
+  if (t.includes("fecha"))
+    return "Hoy es " + new Date().toLocaleDateString("es-CL");
+  if (t.includes("quién eres") || t.includes("quien eres"))
+    return "Soy REAL, tu asistente virtual personal. Actualmente opero en versión 1.0.";
+  if (t.includes("cómo estás") || t.includes("como estas"))
+    return "Todos los sistemas de esta interfaz están operativos.";
+  if (t.includes("ayuda"))
+    return "Puedo responder algunas consultas básicas, indicar la hora, la fecha y utilizar funciones de voz compatibles con tu navegador.";
+  if (t.includes("gracias"))
+    return "Con gusto.";
+  if (t.includes("sistema"))
+    return "Sistema operativo. Interfaz funcional. Módulos básicos activos.";
+
+  return "He recibido tu instrucción, pero mi sistema de inteligencia todavía no está conectado. Esa función se incorporará en una futura actualización.";
+}
+
+function speak(text) {
+  if (!speechEnabled || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "es-ES";
+  utterance.rate = 0.95;
+  utterance.pitch = 0.85;
+  window.speechSynthesis.speak(utterance);
+}
+
+function sendMessage() {
+  const input = document.getElementById("input");
+  const text = input.value.trim();
+  if (!text) return;
+
+  addMessage(text,"user");
+  input.value = "";
+  setStatus("PROCESANDO");
+
+  const response = getResponse(text);
+
+  setTimeout(() => {
+    addMessage(response,"assistant");
+    speak(response);
+    setStatus("EN ESPERA");
+  },500);
+}
+
+document.getElementById("input").addEventListener("keydown",e=>{
+  if(e.key === "Enter") sendMessage();
+});
+
+function toggleSpeech() {
+  speechEnabled = !speechEnabled;
+  if(!speechEnabled && "speechSynthesis" in window)
+    window.speechSynthesis.cancel();
+  addMessage("Voz "+(speechEnabled?"activada.":"desactivada."),"assistant");
+}
+
+function clearChat() {
+  document.getElementById("messages").innerHTML = "";
+  addMessage("Conversación reiniciada. REAL está operativo.","assistant");
+}
+
+function startVoice() {
+  const Recognition = window.SpeechRecognition ||
+                     window.webkitSpeechRecognition;
+
+  if(!Recognition) {
+    addMessage("El navegador no admite reconocimiento de voz. Prueba otro navegador compatible.","assistant");
+    return;
+  }
+
+  const recognition = new Recognition();
+  recognition.lang = "es-CL";
+  recognition.interimResults = false;
+
+  recognition.onstart = () => setStatus("ESCUCHANDO");
+  recognition.onend = () => setStatus("EN ESPERA");
+
+  recognition.onresult = (event) => {
+    document.getElementById("input").value =
+      event.results[0][0].transcript;
+    sendMessage();
+  };
+
+  recognition.onerror = () => {
+    setStatus("EN ESPERA");
+    addMessage("No se pudo completar el reconocimiento de voz.","assistant");
+  };
+
+  recognition.start();
+}
+</script>
+
+</body>
+  </html>
+  
